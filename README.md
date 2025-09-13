@@ -1,0 +1,2 @@
+# Unsupervised-Domain-Adaptation-for-Person-Re-identification
+This project implements an Unsupervised Domain Adaptation (UDA) method for Person Re-identification, featuring a novel pseudo-label refinement strategy that leverages camera information to correct clustering errors. This approach dramatically improves the model's performance on a new, unlabeled dataset by generating higher-quality training signals.
