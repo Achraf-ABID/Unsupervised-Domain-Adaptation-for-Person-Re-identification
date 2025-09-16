@@ -1,58 +1,58 @@
 
-# Adaptation de Domaine Non Supervisée pour la Ré-identification de Personnes avec Raffinement par A-Priori Caméra
+# Unsupervised Domain Adaptation for Person Re-Identification with Camera-Aware Refinement
 
-Ce projet met en œuvre une puissante pipeline d'**Adaptation de Domaine Non Supervisée (Unsupervised Domain Adaptation - UDA)** pour la tâche de ré-identification de personnes (Person Re-ID). L'objectif est d'adapter un modèle pré-entraîné sur un jeu de données source (par ex., Market-1501) à un jeu de données cible (DukeMTMC-reID) **sans utiliser les étiquettes de ce dernier**.
+This project implements a powerful pipeline for **Unsupervised Domain Adaptation (UDA)** for the Person Re-Identification (Person Re-ID) task. The goal is to adapt a model pre-trained on a source dataset (e.g., Market-1501) to a target dataset (DukeMTMC-reID) **without using any of the target's labels**.
 
-La contribution principale de ce travail est une **nouvelle méthode de raffinement des pseudo-labels qui exploite les informations des caméras** pour corriger les erreurs de clustering, améliorant ainsi significativement la qualité de l'auto-apprentissage et les performances finales du modèle.
+The main contribution of this work is a **novel pseudo-label refinement method that leverages camera information** to correct clustering errors, significantly improving the quality of self-training and the final performance of the model.
 
-## ✨ Fonctionnalités Clés
+## ✨ Key Features
 
-*   **Adaptation de Domaine Non Supervisée** : Entraînement sur des données cibles non étiquetées en utilisant des pseudo-labels générés par clustering.
-*   **Raffinement par A-Priori Caméra** : Une méthode innovante pour corriger les pseudo-labels en pondérant les votes des plus proches voisins en fonction de leur caméra d'origine.
-*   **Pseudo-Étiquetage Progressif** : Le seuil de confiance pour accepter les pseudo-labels diminue progressivement, permettant au modèle de s'entraîner sur de plus en plus de données au fil du temps.
-*   **Stratégies d'Entraînement Avancées** :
-    *   Fonction de perte Triplet avec minage des cas difficiles (*Hard Mining*).
-    *   Augmentation de données dans l'espace des caractéristiques avec *Contrastive Mixup*.
-    *   Échantillonneur par identité (*Random Identity Sampler*) pour un entraînement par batchs plus efficace.
-*   **Modèle Performant** : Basé sur une architecture Vision Transformer (ViT) chargée via la bibliothèque `timm`.
+*   **Unsupervised Domain Adaptation**: Training on an unlabeled target dataset using clustering-based pseudo-labels.
+*   **Camera-Aware Refinement**: An innovative method to correct pseudo-labels by weighting the votes of nearest neighbors based on their camera of origin.
+*   **Progressive Pseudo-Labeling**: The confidence threshold for accepting pseudo-labels gradually decreases, allowing the model to train on more data over time.
+*   **Advanced Training Strategies**:
+    *   Triplet Loss with Hard Mining.
+    *   Feature-space augmentation with Contrastive Mixup.
+    *   Random Identity Sampler for more effective batch training.
+*   **High-Performance Model**: Based on a Vision Transformer (ViT) architecture loaded via the `timm` library.
 
-## 🚀 Résultats et Performances
+## 🚀 Results and Performance
 
-L'approche développée montre une amélioration spectaculaire par rapport au modèle de base non adapté. En partant d'un modèle pré-entraîné sur Market-1501 et en l'adaptant à DukeMTMC-reID, nous obtenons les résultats suivants :
+The developed approach shows a dramatic improvement over the non-adapted baseline model. Starting with a model pre-trained on Market-1501 and adapting it to DukeMTMC-reID, we achieve the following results:
 
-| Modèle                                         | mAP (%)             | Rank-1 (%)          |
-| ---------------------------------------------- | ------------------- | ------------------- |
-| **Baseline** (Pré-entraîné, sans adaptation)   | 3.26%               | 7.85%               |
-| **Adapté** (Notre méthode avec raffinement)    | **43.81%**          | **64.09%**          |
-| **Amélioration Relative**                      | **+1242.8%**        | **+716.0%**         |
+| Model                                    | mAP (%)             | Rank-1 (%)          |
+| ---------------------------------------- | ------------------- | ------------------- |
+| **Baseline** (Pre-trained, no adaptation) | 3.26%               | 7.85%               |
+| **Adapted** (Our method with refinement) | **43.81%**          | **64.09%**          |
+| **Relative Improvement**                 | **+1242.8%**        | **+716.0%**         |
 
-Ces résultats démontrent l'efficacité exceptionnelle de la méthode d'adaptation, qui transforme un modèle initialement peu performant sur le domaine cible en un système de Re-ID robuste et précis.
+These results demonstrate the exceptional effectiveness of the adaptation method, which transforms an initially poor-performing model on the target domain into a robust and accurate Re-ID system.
 
-## 🛠️ Guide d'Installation et d'Utilisation
+## 🛠️ Installation and Usage Guide
 
-### 1. Cloner le Dépôt
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/VOTRE_NOM_UTILISATEUR/VOTRE_NOM_DE_PROJET.git
-cd VOTRE_NOM_DE_PROJET
+git clone https://github.com/YOUR_USERNAME/YOUR_PROJECT_NAME.git
+cd YOUR_PROJECT_NAME
 ```
 
-### 2. Créer l’environnement et installer les dépendances
+### 2. Create Environment and Install Dependencies
 
-Il est fortement recommandé d'utiliser un environnement virtuel (comme `venv` ou `conda`) pour isoler les dépendances du projet.
+It is highly recommended to use a virtual environment (like `venv` or `conda`) to isolate project dependencies.
 
 ```bash
-# Créez et activez votre environnement virtuel (exemple avec venv)
+# Create and activate your virtual environment (example with venv)
 python -m venv venv
-source venv/bin/activate  # Sur Windows, utilisez: venv\Scripts\activate
+source venv/bin/activate  # On Windows, use: venv\Scripts\activate
 
-# Installez les paquets requis à partir du fichier requirements.txt
+# Install the required packages from the requirements.txt file
 pip install -r requirements.txt
 ```
 
-### 3. Fichier `requirements.txt`
+### 3. `requirements.txt` File
 
-Ce fichier est utilisé par la commande `pip install -r` et doit contenir les dépendances suivantes :
+This file is used by the `pip install -r` command and should contain the following dependencies:
 
 ```txt
 torch
@@ -64,12 +64,12 @@ Pillow
 tqdm
 ```
 
-### 4. 📂 Organisation des Données
+### 4. 📂 Data Organization
 
-Pour que le script s'exécute sans erreur, vous devez organiser vos jeux de données et votre modèle pré-entraîné en respectant l'arborescence ci-dessous :
+For the script to run without errors, you must organize your datasets and pre-trained model according to the directory structure below:
 
 ```
-/chemin/vers/vos/donnees/
+/path/to/your/data/
 ├── dukemtmcreid/
 │   ├── bounding_box_train/
 │   ├── bounding_box_test/
@@ -79,35 +79,35 @@ Pour que le script s'exécute sans erreur, vous devez organiser vos jeux de donn
     └── Market1501_clipreid_12x12sie_ViT-B-16_60.pth
 ```
 
-👉 **Important** : N'oubliez pas d'**adapter les chemins** (`DUKE_DATA_PATH`, `MARKET_MODEL_PATH`, etc.) dans la classe `Config` du script `train.py` pour qu'ils pointent vers les bons emplacements sur votre machine.
+👉 **Important**: Remember to **adapt the paths** (`DUKE_DATA_PATH`, `MARKET_MODEL_PATH`, etc.) in the `Config` class of the `train.py` script to point to the correct locations on your machine.
 
-### ▶️ Lancement de l’Entraînement
+### ▶️ Running the Training
 
-Une fois la configuration terminée, lancez le processus d'adaptation avec la commande suivante :
+Once the setup is complete, launch the adaptation process with the following command:
 
 ```bash
 python train.py
 ```
 
-Le script exécutera automatiquement les étapes suivantes :
-1.  **Évaluation du modèle de base** pour établir une performance de référence.
-2.  **Lancement du processus d'adaptation itératif**, qui alterne entre la génération de pseudo-labels, leur raffinement et l'entraînement du modèle.
-3.  **Sauvegarde du meilleur modèle** (ex. `best_model_camera_refined.pth`) à chaque fois que les performances de validation (mAP) s'améliorent.
-4.  **Arrêt anticipé** (*Early Stopping*) si les performances n'augmentent plus.
-5.  **Évaluation finale** du meilleur modèle sauvegardé à la fin du processus.
+The script will automatically perform the following steps:
+1.  **Evaluation of the baseline model** to establish a performance benchmark.
+2.  **Launch of the iterative adaptation process**, which alternates between generating pseudo-labels, refining them, and training the model.
+3.  **Saving the best model** (e.g., `best_model_camera_refined.pth`) whenever the validation performance (mAP) improves.
+4.  **Early Stopping** if performance no longer increases.
+5.  **Final evaluation** of the best saved model at the end of the process.
 
-## 🔧 Paramètres Principaux
+## 🔧 Key Parameters
 
-Tous les hyperparamètres clés peuvent être facilement modifiés directement dans la classe `Config` en haut du script `train.py`. Les plus importants incluent :
+All key hyperparameters can be easily modified directly in the `Config` class at the top of the `train.py` script. The most important ones include:
 
-*   `ADAPTATION_EPOCHS` : Le nombre maximum d’époques pour le cycle d'adaptation.
-*   `ADAPTATION_LR` : Le taux d’apprentissage pour l'optimiseur Adam.
-*   `P` & `K` : Le nombre d’identités (`P`) et d’instances par identité (`K`) à inclure dans chaque batch.
-*   `CONFIDENCE_THRESHOLD_START` / `_END` : Les seuils de confiance de départ et de fin pour le filtrage progressif des pseudo-labels.
-*   `CAMERA_REFINEMENT_K` : Le nombre de plus proches voisins (`k`) à considérer lors de l'étape de raffinement par caméra.
-*   `CAMERA_REFINEMENT_WEIGHT` : Le poids crucial appliqué aux votes des voisins provenant de caméras différentes (une valeur > 1.0 est recommandée pour valoriser la diversité des points de vue).
+*   `ADAPTATION_EPOCHS`: The maximum number of epochs for the adaptation cycle.
+*   `ADAPTATION_LR`: The learning rate for the Adam optimizer.
+*   `P` & `K`: The number of identities (`P`) and instances per identity (`K`) to include in each batch.
+*   `CONFIDENCE_THRESHOLD_START` / `_END`: The starting and ending confidence thresholds for the progressive filtering of pseudo-labels.
+*   `CAMERA_REFINEMENT_K`: The number of nearest neighbors (`k`) to consider during the camera-aware refinement step.
+*   `CAMERA_REFINEMENT_WEIGHT`: The crucial weight applied to votes from neighbors on different cameras (a value > 1.0 is recommended to prioritize diverse viewpoints).
 
-## 📜 Licence
+## 📜 License
 
-Ce projet est distribué sous la licence MIT. Consultez le fichier `LICENSE` pour plus de détails.
+This project is distributed under the MIT License. See the `LICENSE` file for more details.
 ```
