@@ -1,113 +1,95 @@
+# Unsupervised Domain Adaptation for Person Re-identification with Vision Transformers
 
-# Unsupervised Domain Adaptation for Person Re-Identification with Camera-Aware Refinement
+This repository contains the code for an advanced Unsupervised Domain Adaptation (UDA) approach for person re-identification (ReID). It leverages a Vision Transformer (ViT) model and a sophisticated pseudo-labeling strategy that is enhanced with camera-aware refinement to achieve significant performance improvements when adapting from a labeled source dataset to an unlabeled target dataset.
 
-This project implements a powerful pipeline for **Unsupervised Domain Adaptation (UDA)** for the Person Re-Identification (Person Re-ID) task. The goal is to adapt a model pre-trained on a source dataset (e.g., Market-1501) to a target dataset (DukeMTMC-reID) **without using any of the target's labels**.
+## Project Overview
 
-The main contribution of this work is a **novel pseudo-label refinement method that leverages camera information** to correct clustering errors, significantly improving the quality of self-training and the final performance of the model.
+Person Re-identification (ReID) is a critical task in computer vision that involves identifying the same person across different cameras. While supervised methods perform well, they require extensive labeled data, which is often impractical to obtain for every new camera network. Unsupervised Domain Adaptation (UDA) addresses this by adapting a model trained on a labeled "source" dataset to an unlabeled "target" dataset.
 
-## ✨ Key Features
+This project implements a UDA pipeline that uses a Vision Transformer (ViT-B-16) backbone, pre-trained on a large-scale dataset, and fine-tunes it on the target domain using a progressive pseudo-labeling and clustering approach. A key innovation of this work is the **camera-aware label refinement** step, which leverages camera information to improve the quality of the generated pseudo-labels, leading to more robust and accurate models.
 
-*   **Unsupervised Domain Adaptation**: Training on an unlabeled target dataset using clustering-based pseudo-labels.
-*   **Camera-Aware Refinement**: An innovative method to correct pseudo-labels by weighting the votes of nearest neighbors based on their camera of origin.
-*   **Progressive Pseudo-Labeling**: The confidence threshold for accepting pseudo-labels gradually decreases, allowing the model to train on more data over time.
-*   **Advanced Training Strategies**:
-    *   Triplet Loss with Hard Mining.
-    *   Feature-space augmentation with Contrastive Mixup.
-    *   Random Identity Sampler for more effective batch training.
-*   **High-Performance Model**: Based on a Vision Transformer (ViT) architecture loaded via the `timm` library.
+### Key Features:
 
-## 🚀 Results and Performance
+*   **Unsupervised Domain Adaptation**: Adapts a ReID model from a labeled source to an unlabeled target dataset.
+*   **Vision Transformer Backbone**: Utilizes the powerful ViT-B-16 architecture for feature extraction.
+*   **Progressive Pseudo-Labeling**: Employs DBSCAN clustering to generate pseudo-labels for the target data, with a confidence threshold that adapts over epochs.
+*   **Camera-Aware Refinement**: A novel technique that refines pseudo-labels by giving more weight to votes from neighbors captured by different cameras, which helps to correct noisy labels.
+*   **Advanced Training Techniques**: Incorporates techniques like mixup augmentation, hard mining triplet loss, and an adaptive temperature to improve training stability and performance.
 
-The developed approach shows a dramatic improvement over the non-adapted baseline model. Starting with a model pre-trained on Market-1501 and adapting it to DukeMTMC-reID, we achieve the following results:
+## Datasets
 
-| Model                                    | mAP (%)             | Rank-1 (%)          |
-| ---------------------------------------- | ------------------- | ------------------- |
-| **Baseline** (Pre-trained, no adaptation) | 3.26%               | 7.85%               |
-| **Adapted** (Our method with refinement) | **43.81%**          | **64.09%**          |
-| **Relative Improvement**                 | **+1242.8%**        | **+716.0%**         |
+This project uses three standard large-scale person ReID datasets:
 
-These results demonstrate the exceptional effectiveness of the adaptation method, which transforms an initially poor-performing model on the target domain into a robust and accurate Re-ID system.
+*   **Market-1501**: Contains 32,668 bounding boxes of 1,501 identities, captured by six cameras. It is a widely used benchmark for person ReID.
+*   **DukeMTMC-reID**: A subset of the DukeMTMC dataset, it consists of 36,411 bounding boxes for 1,812 identities across eight cameras. It includes 16,522 training images of 702 identities, 2,228 query images, and 17,661 gallery images.
+*   **MSMT17**: A more challenging dataset with 126,441 bounding boxes of 4,101 identities, captured by a 15-camera network in both indoor and outdoor environments, spanning a long period with complex lighting variations.
 
-## 🛠️ Installation and Usage Guide
+## Methodology
 
-### 1. Clone the Repository
+The UDA process in this notebook can be broken down into the following steps for each adaptation epoch:
 
-```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_PROJECT_NAME.git
-cd YOUR_PROJECT_NAME
-```
+1.  **Feature Extraction**: The current model is used to extract features for all images in the unlabeled target training set.
+2.  **Progressive Pseudo-Labeling**:
+    *   The DBSCAN clustering algorithm is applied to the extracted features to group similar instances.
+    *   A confidence score is calculated for each sample within a cluster based on its similarity to the cluster's centroid.
+    *   Pseudo-labels are assigned only to samples that meet a progressively adjusted confidence threshold. This threshold starts high and decreases over time, gradually incorporating more samples into the training process.
+3.  **Camera-Aware Label Refinement**:
+    *   For each labeled sample, its k-nearest neighbors are identified.
+    *   A weighted voting process is used to determine if the sample's current pseudo-label should be changed. Votes from neighbors in different camera views are given a higher weight, based on the assumption that cross-camera matches are more informative for ReID.
+4.  **Model Training**: The model is fine-tuned for one epoch using the refined pseudo-labels. The training process uses an advanced triplet loss with hard mining and an adaptive temperature, as well as mixup augmentation.
+5.  **Evaluation and Model Saving**: The model's performance is evaluated on the target dataset's query and gallery sets using mean Average Precision (mAP) and Rank-1 accuracy. If the performance improves, the model is saved. Early stopping is used to conclude the training if there is no improvement for a set number of epochs.
 
-### 2. Create Environment and Install Dependencies
+## Experiments and Results
 
-It is highly recommended to use a virtual environment (like `venv` or `conda`) to isolate project dependencies.
+The notebook presents two main UDA experiments, a supervised baseline, and visualizations of the results.
 
-```bash
-# Create and activate your virtual environment (example with venv)
-python -m venv venv
-source venv/bin/activate  # On Windows, use: venv\Scripts\activate
+### Experiment 1: Market-1501 to DukeMTMC-reID
 
-# Install the required packages from the requirements.txt file
-pip install -r requirements.txt
-```
+*   **Source Dataset**: Market-1501 (for pre-training the baseline model)
+*   **Target Dataset**: DukeMTMC-reID
 
-### 3. `requirements.txt` File
+| Model | mAP | Rank-1 Accuracy |
+| :--- | :--- | :--- |
+| **Baseline (No Adaptation)** | 3.26% | 7.85% |
+| **Adapted Model** | **43.81%** | **64.09%** |
 
-This file is used by the `pip install -r` command and should contain the following dependencies:
+The adaptation process resulted in a remarkable **+1242.8%** improvement in mAP and a **+716.0%** increase in Rank-1 accuracy, demonstrating the effectiveness of the proposed UDA strategy.
 
-```txt
-torch
-torchvision
-timm
-scikit-learn
-numpy
-Pillow
-tqdm
-```
+### Experiment 2: MSMT17 to DukeMTMC-reID
 
-### 4. 📂 Data Organization
+*   **Source Dataset**: MSMT17 (for pre-training the baseline model)
+*   **Target Dataset**: DukeMTMC-reID
 
-For the script to run without errors, you must organize your datasets and pre-trained model according to the directory structure below:
+| Model | mAP | Rank-1 Accuracy |
+| :--- | :--- | :--- |
+| **Baseline (No Adaptation)** | 3.26% | 7.85% |
+| **Adapted Model** | **43.16%** | **62.97%** |
 
-```
-/path/to/your/data/
-├── dukemtmcreid/
-│   ├── bounding_box_train/
-│   ├── bounding_box_test/
-│   └── query/
-│
-└── market/
-    └── Market1501_clipreid_12x12sie_ViT-B-16_60.pth
-```
+When adapting from the larger and more diverse MSMT17 dataset, the model achieved a **+1222.8%** improvement in mAP and a **+701.7%** increase in Rank-1 accuracy.
 
-👉 **Important**: Remember to **adapt the paths** (`DUKE_DATA_PATH`, `MARKET_MODEL_PATH`, etc.) in the `Config` class of the `train.py` script to point to the correct locations on your machine.
+### Supervised Training on DukeMTMC-reID (for comparison)
 
-### ▶️ Running the Training
+A supervised training experiment was also conducted on the DukeMTMC-reID dataset to provide an upper-bound reference for the UDA performance.
 
-Once the setup is complete, launch the adaptation process with the following command:
+| Model | mAP | Rank-1 Accuracy |
+| :--- | :--- | :--- |
+| **Supervised Model** | **70.43%** | **83.44%** |
 
-```bash
-python train.py
-```
+### Visualizations
 
-The script will automatically perform the following steps:
-1.  **Evaluation of the baseline model** to establish a performance benchmark.
-2.  **Launch of the iterative adaptation process**, which alternates between generating pseudo-labels, refining them, and training the model.
-3.  **Saving the best model** (e.g., `best_model_camera_refined.pth`) whenever the validation performance (mAP) improves.
-4.  **Early Stopping** if performance no longer increases.
-5.  **Final evaluation** of the best saved model at the end of the process.
+The notebook includes several plots to visualize the training dynamics and results:
+*   A line chart showing the evolution of mAP and Rank-1 accuracy during the adaptation process.
+*   A bar chart comparing the performance of the baseline model with the final adapted model.
+*   A line chart illustrating the relationship between the training loss and the number of pseudo-labeled samples over epochs.
+*   A bar chart showing the percentage of labels modified by the camera-refinement step in each epoch.
 
-## 🔧 Key Parameters
+## How to Use
 
-All key hyperparameters can be easily modified directly in the `Config` class at the top of the `train.py` script. The most important ones include:
+To run this notebook, you will need a Python environment with the following libraries installed:
+`scikit-learn`, `timm`, `torch`, `torchvision`, `numpy`, `Pillow`, `tqdm`, `matplotlib`, and `seaborn`.
 
-*   `ADAPTATION_EPOCHS`: The maximum number of epochs for the adaptation cycle.
-*   `ADAPTATION_LR`: The learning rate for the Adam optimizer.
-*   `P` & `K`: The number of identities (`P`) and instances per identity (`K`) to include in each batch.
-*   `CONFIDENCE_THRESHOLD_START` / `_END`: The starting and ending confidence thresholds for the progressive filtering of pseudo-labels.
-*   `CAMERA_REFINEMENT_K`: The number of nearest neighbors (`k`) to consider during the camera-aware refinement step.
-*   `CAMERA_REFINEMENT_WEIGHT`: The crucial weight applied to votes from neighbors on different cameras (a value > 1.0 is recommended to prioritize diverse viewpoints).
+The notebook is structured to be executed sequentially. Simply run the cells in order to perform the experiments. The configuration parameters in the `Config` class can be adjusted to explore different settings for the UDA process.
 
-## 📜 License
+## Conclusion
 
-This project is distributed under the MIT License. See the `LICENSE` file for more details.
-```
+This project showcases a highly effective approach to Unsupervised Domain Adaptation for Person Re-identification. By combining a powerful Vision Transformer model with a progressive pseudo-labeling strategy and a novel camera-aware refinement technique, it achieves substantial performance gains on challenging cross-domain ReID tasks. The detailed experiments and visualizations provide valuable insights into the dynamics of the adaptation process.
