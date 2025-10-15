@@ -1,9 +1,10 @@
 # Unsupervised Domain Adaptation for Person Re-identification with Vision Transformers
 
 This repository contains the code for an advanced Unsupervised Domain Adaptation (UDA) approach for person re-identification (ReID). It leverages a Vision Transformer (ViT) model and a sophisticated pseudo-labeling strategy that is enhanced with camera-aware refinement to achieve significant performance improvements when adapting from a labeled source dataset to an unlabeled target dataset.
-## 🎥 Project Demo
+## 🎞️ Demo Preview
 
-[![Watch the video](assets/demo_thumbnail.png)](https://github.com/Achraf-ABID/Unsupervised-Domain-Adaptation-for-Person-Re-identification/blob/main/AI_Learns_to_See_in_a_New_City.mp4)
+![Demo of UDA Process](assets/AI_Learns_to_See_in_a_New_City.gif)
+
 ## Project Overview
 
 Person Re-identification (ReID) is a critical task in computer vision that involves identifying the same person across different cameras. While supervised methods perform well, they require extensive labeled data, which is often impractical to obtain for every new camera network. Unsupervised Domain Adaptation (UDA) addresses this by adapting a model trained on a labeled "source" dataset to an unlabeled "target" dataset.
