@@ -1,6 +1,4 @@
-Of course. Here is a professional `README.md` for your project, written in English.
 
----
 
 # Domain Adaptation for Person Re-Identification
 
