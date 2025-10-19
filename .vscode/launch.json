@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Lancer le script principal",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--duke_data_path", "./data/DukeMTMC-reID",
+                "--market_model_path", "./pretrained_models/Market1s1_clipreid_12x12sie_ViT-B-16_60.pth",
+                "--output_path", "./output",
+                "--adaptation_epochs", "5",
+                "--p", "8",
+                "--k", "4"
+            ]
+        }
+    ]
+}
