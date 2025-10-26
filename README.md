@@ -107,7 +107,7 @@ The script automatically generates a series of visualizations to provide a deep 
 ### 1. Performance Evolution Over Epochs
 This graph tracks the Mean Average Precision (mAP) and Rank-1 accuracy on the target test set throughout the adaptation process. It clearly shows the model's learning progress and helps identify the best-performing epoch.
 
-![Performance Evolution](https://github.com/achraf-abid/reid-project/blob/main/graphs/evolution_performances.png?raw=true)
+![Performance Evolution](https://github.com/Achraf-ABID/Unsupervised-Domain-Adaptation-for-Person-Re-identification/blob/main/output/graphs/evolution_performances.png?raw=true)
 
 ### 2. Comparison: Before vs. After Adaptation
 This bar chart provides a direct comparison of the model's performance before any adaptation (baseline) and after the full unsupervised domain adaptation process. It highlights the significant improvements gained.
