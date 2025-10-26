@@ -112,16 +112,16 @@ This graph tracks the Mean Average Precision (mAP) and Rank-1 accuracy on the ta
 ### 2. Comparison: Before vs. After Adaptation
 This bar chart provides a direct comparison of the model's performance before any adaptation (baseline) and after the full unsupervised domain adaptation process. It highlights the significant improvements gained.
 
-![Before vs After](https://github.com/achraf-abid/reid-project/blob/main/graphs/comparaison_avant_apres.png?raw=true)
+![Before vs After](https://github.com/Achraf-ABID/Unsupervised-Domain-Adaptation-for-Person-Re-identification/blob/main/output/graphs/comparaison_avant_apres.png?raw=true)
 
 ### 3. Training Dynamics: Loss vs. Pseudo-Labels
 This dual-axis plot visualizes the relationship between the average training loss and the number of confident pseudo-labels generated per epoch. It offers insights into the stability and effectiveness of the pseudo-labeling strategy.
 
-![Training Dynamics](https://github.com/achraf-abid/reid-project/blob/main/graphs/dynamique_entrainement.png?raw=true)
+![Training Dynamics](https://github.com/Achraf-ABID/Unsupervised-Domain-Adaptation-for-Person-Re-identification/blob/main/output/graphs/dynamique_entrainement.png?raw=true)
 
 ### 4. Impact of Camera-Aware Refinement
 This plot shows the percentage of pseudo-labels that were changed or corrected by the camera-aware refinement step at each epoch. It demonstrates the direct impact of this innovative technique on label quality.
 
-![Refinement Impact](https://github.com/achraf-abid/reid-project/blob/main/graphs/impact_raffinement.png?raw=true)
+![Refinement Impact](https://github.com/Achraf-ABID/Unsupervised-Domain-Adaptation-for-Person-Re-identification/blob/main/output/graphs/impact_raffinement.png?raw=true)
 
 ---
