@@ -1,4 +1,5 @@
 
+
 # Unsupervised Domain Adaptation for Person Re-Identification using Progressive Pseudo-Labeling and Camera Priors
 
 This repository contains a PyTorch implementation of an advanced Unsupervised Domain Adaptation (UDA) pipeline for Person Re-Identification (Re-ID). The primary goal is to adapt a Re-ID model, pre-trained on a source dataset (e.g., Market-1501), to perform effectively on a new, unlabeled target dataset (e.g., DukeMTMC-reID) without requiring any manual annotation.
@@ -96,25 +97,31 @@ You can customize the execution using the following arguments:
 -   `--adaptation_epochs`: Maximum number of adaptation epochs (default: `40`).
 -   `--adaptation_lr`: Learning rate for the Adam optimizer (default: `3.5e-5`).
 -   `--p`: Number of distinct identities per training batch (default: `16`).
--   `--k`: Number of instances per identity in a batch (default: `4`).
+-   `--k`: Number of instances per identity in a batch (default: `4`)..
 -   `--early_stopping_patience`: Number of epochs to wait for improvement before stopping (default: `8`).
--   `--device`: Computation device (`cuda` or `cpu`).
 
-For a full list of tunable hyperparameters (e.g., clustering thresholds, loss margins), see the `argparse` section in `main.py`.
+## 📊 Results & Analysis
 
-## 📊 Expected Output
+The script automatically generates a series of visualizations to provide a deep understanding of the adaptation process. Below are examples of the output graphs.
 
-Upon completion, the script will generate the following in the specified output directory (`./output/` by default):
+### 1. Performance Evolution Over Epochs
+This graph tracks the Mean Average Precision (mAP) and Rank-1 accuracy on the target test set throughout the adaptation process. It clearly shows the model's learning progress and helps identify the best-performing epoch.
 
-1.  **Best Model Checkpoint**: The state dictionary of the model that achieved the highest mAP during adaptation.
-    -   `best_model_camera_refined.pth`
+![Performance Evolution](https://github.com/achraf-abid/reid-project/blob/main/graphs/evolution_performances.png?raw=true)
 
-2.  **Console Logs**: Detailed logs for each epoch, including performance metrics (mAP, Rank-1), loss, number of pseudo-labels generated, and the impact of camera refinement.
+### 2. Comparison: Before vs. After Adaptation
+This bar chart provides a direct comparison of the model's performance before any adaptation (baseline) and after the full unsupervised domain adaptation process. It highlights the significant improvements gained.
 
-3.  **Analysis Graphs**: A `graphs/` subdirectory containing PNG files that visualize the adaptation process:
-    -   **`1_evolution_performances.png`**: A plot showing the mAP and Rank-1 accuracy over epochs.
-    -   **`2_comparaison_avant_apres.png`**: A bar chart comparing the performance of the baseline model vs. the final adapted model.
-    -   **`3_dynamique_entrainement.png`**: A dual-axis chart showing the training loss and the number of generated pseudo-labels over time.
-    -   **`4_impact_raffinement.png`**: A bar chart illustrating the percentage of labels modified by the camera-refinement step in each epoch.
+![Before vs After](https://github.com/achraf-abid/reid-project/blob/main/graphs/comparaison_avant_apres.png?raw=true)
+
+### 3. Training Dynamics: Loss vs. Pseudo-Labels
+This dual-axis plot visualizes the relationship between the average training loss and the number of confident pseudo-labels generated per epoch. It offers insights into the stability and effectiveness of the pseudo-labeling strategy.
+
+![Training Dynamics](https://github.com/achraf-abid/reid-project/blob/main/graphs/dynamique_entrainement.png?raw=true)
+
+### 4. Impact of Camera-Aware Refinement
+This plot shows the percentage of pseudo-labels that were changed or corrected by the camera-aware refinement step at each epoch. It demonstrates the direct impact of this innovative technique on label quality.
+
+![Refinement Impact](https://github.com/achraf-abid/reid-project/blob/main/graphs/impact_raffinement.png?raw=true)
 
 ---
